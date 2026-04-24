@@ -1,73 +1,91 @@
-# React + TypeScript + Vite
+# Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Fullstack todo-приложение с авторизацией, real-time синхронизацией и современным стеком
 
-Currently, two official plugins are available:
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat&logo=typescript)
+![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-2.0-764ABC?style=flat&logo=redux)
+![Supabase](https://img.shields.io/badge/Supabase-2.0-3ECF8E?style=flat&logo=supabase)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## О проекте
 
-## React Compiler
+Пет-проект на современном React-стеке с полноценной авторизацией через Supabase, глобальным стейтом через RTK и UI-стейтом через Zustand. Написан с упором на архитектуру и TypeScript.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Стек
 
-## Expanding the ESLint configuration
+| Слой | Технология |
+|---|---|
+| UI | React 19 + TypeScript |
+| Сборка | Vite |
+| Глобальный стейт | Redux Toolkit |
+| UI стейт | Zustand |
+| Backend / Auth / DB | Supabase |
+| Роутинг | React Router v7 |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Фичи
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Регистрация и вход через Supabase Auth
+- Восстановление сессии после перезагрузки страницы
+- Защищённые роуты через ProtectedRoute
+- CRUD задач с синхронизацией с PostgreSQL
+- Оптимистичные апдейты
+- Фильтрация задач (all / active / completed) через Zustand
+- Полная типизация TypeScript
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Архитектура
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── app/
+│   ├── Router.tsx           # Роуты приложения
+│   ├── AuthProvider.tsx     # Восстановление сессии при старте
+│   └── ProtectedRoute.tsx   # Защита роутов
+├── features/
+│   ├── auth/
+│   │   └── authSlice.ts     # Стейт авторизации + thunks (login, register, logout)
+│   └── todos/
+│       └── todosSlice.ts    # Стейт задач + CRUD thunks
+├── pages/
+│   ├── LoginPage.tsx
+│   ├── RegisterPage.tsx
+│   └── TodosPage.tsx
+├── shared/
+│   ├── lib/
+│   │   └── supabase.ts      # Supabase client
+│   └── types/
+│       └── index.ts         # Общие типы (Todo, User)
+└── store/
+    ├── index.ts             # configureStore
+    └── hooks.ts             # useAppSelector, useAppDispatch
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Запуск локально
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm install
+npm run dev
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Создай `.env` в корне проекта:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+## База данных
+
+```sql
+create table todos (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users not null,
+  title text not null,
+  completed boolean default false,
+  created_at timestamp with time zone default now()
+);
+
+create policy "Users can view own todos" on todos for select using (auth.uid() = user_id);
+create policy "Users can insert own todos" on todos for insert with check (auth.uid() = user_id);
+create policy "Users can update own todos" on todos for update using (auth.uid() = user_id);
+create policy "Users can delete own todos" on todos for delete using (auth.uid() = user_id);
 ```
