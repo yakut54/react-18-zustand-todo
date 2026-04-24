@@ -17,7 +17,7 @@ const initialState: AuthState = {
   initialized: false,
 };
 
-//=========================
+//============= loginThunk ============
 
 interface LoginCredentials {
   email: string;
@@ -39,7 +39,7 @@ export const loginThunk = createAsyncThunk<
   return { id: data.user.id, email: data.user.email }; // попадёт в fulfilled
 });
 
-//=========================
+//============= registerThunk ============
 
 interface RegisterCredentials {
   email: string;
@@ -58,7 +58,7 @@ export const registerThunk = createAsyncThunk<
   return { id: data.user.id, email: data.user.email };
 });
 
-//=========================
+//============ initAuthThunk =============
 
 export const initAuthThunk = createAsyncThunk<
   User | null,
@@ -75,7 +75,7 @@ export const initAuthThunk = createAsyncThunk<
   return { id: user.id, email: user.email };
 });
 
-//=========================
+//============= logoutThunk ============
 
 export const logoutThunk = createAsyncThunk<void, void>(
   "auth/logout",
@@ -98,58 +98,52 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     //============ loginThunk =============
 
-    builder.addCase(loginThunk.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-
-    builder.addCase(
-      loginThunk.fulfilled,
-      (state, action: PayloadAction<User>) => {
+    builder
+      .addCase(loginThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginThunk.fulfilled, (state, action: PayloadAction<User>) => {
         state.loading = false;
         state.user = action.payload;
-      },
-    );
-
-    builder.addCase(loginThunk.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload ?? "Ошибка входа";
-    });
+      })
+      .addCase(loginThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Ошибка входа";
+      });
 
     //============ registerThunk =============
 
-    builder.addCase(registerThunk.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-
-    builder.addCase(registerThunk.fulfilled, (state, action) => {
-      state.loading = false;
-      state.user = action.payload;
-    });
-
-    builder.addCase(registerThunk.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload ?? "Ошибка регистрации";
-    });
+    builder
+      .addCase(registerThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(registerThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Ошибка регистрации";
+      });
 
     //============ initAuthThunk =============
 
-    builder.addCase(initAuthThunk.fulfilled, (state, action) => {
-      state.user = action.payload;
-      state.loading = false;
-      state.initialized = true;
-    });
-
-    builder.addCase(initAuthThunk.pending, (state) => {
-      state.loading = true;
-    });
-
-    builder.addCase(initAuthThunk.rejected, (state) => {
-      state.user = null;
-      state.loading = false;
-      state.initialized = true;
-    });
+    builder
+      .addCase(initAuthThunk.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.loading = false;
+        state.initialized = true;
+      })
+      .addCase(initAuthThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(initAuthThunk.rejected, (state) => {
+        state.user = null;
+        state.loading = false;
+        state.initialized = true;
+      });
 
     //============ logoutThunk =============
 
