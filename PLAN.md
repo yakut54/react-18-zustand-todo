@@ -82,11 +82,13 @@
 ## ДЕНЬ 3 — CRUD и Zustand ← СЕЙЧАС ЗДЕСЬ
 
 ### CRUD задач с Supabase
-- ⬜ `features/todos/todosThunks.ts` — fetchTodos, addTodo, removeTodo, toggleTodo
-- ⬜ Загрузка задач при входе на TodosPage
-- ⬜ Форма добавления задачи
-- ⬜ Удаление задачи
-- ⬜ Переключение completed
+- ✅ `features/todos/todosThunks.ts` — отдельный файл для async операций
+- ✅ `fetchTodosThunk` — загрузка задач из Supabase при входе на TodosPage
+- ✅ `addTodoThunk` — добавление задачи с явным маппингом типов
+- ✅ Форма добавления задачи с controlled input
+- ✅ Список задач с CSS стилями
+- ⬜ `removeTodoThunk` — удаление задачи
+- ⬜ `toggleTodoThunk` — переключение completed
 - ⬜ Оптимистичные апдейты
 
 ### Zustand
@@ -95,8 +97,8 @@
 - ⬜ Фильтрация списка задач
 
 ### React хуки — покрываем в процессе
-- ✅ `useState` — формы логина/регистрации
-- ✅ `useEffect` — initAuth при старте
+- ✅ `useState` — формы логина/регистрации, инпут добавления задачи
+- ✅ `useEffect` — initAuth при старте, загрузка задач
 - ⬜ `useMemo` — мемоизация отфильтрованного списка задач
 - ⬜ `useCallback` — стабилизация обработчиков в списке задач
 - ⬜ `useRef` — фокус на инпут при добавлении задачи
