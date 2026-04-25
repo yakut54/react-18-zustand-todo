@@ -102,7 +102,7 @@
 - ✅ `useState` — формы логина/регистрации, инпут добавления задачи
 - ✅ `useEffect` — initAuth при старте, загрузка задач
 - ✅ `useMemo` — мемоизация отфильтрованного списка задач
-- ⬜ `useCallback` — стабилизация обработчиков в списке задач
+- ✅ `useCallback` — стабилизация обработчиков в списке задач
 - ⬜ `useRef` — фокус на инпут при добавлении задачи
 - ⬜ `useId` — id для label/input в формах (accessibility)
 - ⬜ `useDeferredValue` — поиск по задачам без лагов (React 18+)
@@ -146,18 +146,6 @@ const { data, isLoading, error } = useGetTodosQuery()
 - Что такое кэш в RTK Query и как он инвалидируется?
 - Что такое `tags` и `providesTags` / `invalidatesTags`?
 - Когда использовать RTK Query, а когда `createAsyncThunk`?
-
-**Вопросы на собесе:**
-- Чем Zustand отличается от Redux?
-- Как работает подписка в Zustand?
-- Можно ли использовать Zustand и RTK вместе? (Да!)
-- Что такое `shallow` и `useShallow`?
-- Что такое `persist` middleware и как работает гидрация?
-- Что такое currying и зачем `create<T>()()`?
-- Зачем `devtools` и как назвать экшн в `set`?
-- Что такое оптимистичный апдейт и зачем он нужен?
-- Что такое `useDeferredValue` и когда использовать?
-- Что такое `useMemo` и когда НЕ стоит использовать?
 
 ---
 
@@ -205,6 +193,10 @@ create policy "Users can view own todos" on todos for select using (auth.uid() =
 create policy "Users can insert own todos" on todos for insert with check (auth.uid() = user_id);
 create policy "Users can update own todos" on todos for update using (auth.uid() = user_id);
 create policy "Users can delete own todos" on todos for delete using (auth.uid() = user_id);
+
+-- Права доступа ✅
+grant usage on schema public to anon, authenticated;
+grant all on table todos to anon, authenticated;
 ```
 
 ---
