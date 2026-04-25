@@ -44,7 +44,8 @@ src/
 │   ├── auth/
 │   │   └── authSlice.ts     # Стейт авторизации + thunks (login, register, logout)
 │   └── todos/
-│       └── todosSlice.ts    # Стейт задач + CRUD thunks
+│       ├── todosSlice.ts    # Стейт задач + extraReducers
+│       └── todosThunks.ts   # CRUD thunks (fetch, add, delete, toggle)
 ├── pages/
 │   ├── LoginPage.tsx
 │   ├── RegisterPage.tsx
@@ -89,7 +90,7 @@ create policy "Users can insert own todos" on todos for insert with check (auth.
 create policy "Users can update own todos" on todos for update using (auth.uid() = user_id);
 create policy "Users can delete own todos" on todos for delete using (auth.uid() = user_id);
 
-  -- Права доступа                                                                                                                                                                                                        
+-- Права доступа                                                                                                                                                                                                        
 grant usage on schema public to anon, authenticated;
 grant all on table todos to anon, authenticated; 
 ```
