@@ -34,9 +34,9 @@ export const loginThunk = createAsyncThunk<
     password,
   });
 
-  if (error) throw error; // попадёт в rejected
+  if (error) return rejectWithValue(error.message);
   if (!data.user.email) return rejectWithValue("Email не найден");
-  return { id: data.user.id, email: data.user.email }; // попадёт в fulfilled
+  return { id: data.user.id, email: data.user.email };
 });
 
 //============= registerThunk ============

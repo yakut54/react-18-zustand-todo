@@ -28,9 +28,10 @@
 - Восстановление сессии после перезагрузки страницы
 - Защищённые роуты через ProtectedRoute
 - CRUD задач с синхронизацией с PostgreSQL
-- Оптимистичные апдейты
-- Фильтрация задач (all / active / completed) через Zustand
-- Полная типизация TypeScript
+- Фильтрация задач (all / active / completed) через Zustand + persist
+- Zustand devtools + useShallow для оптимизации ререндеров
+- useMemo для мемоизации отфильтрованного списка
+- Полная типизация TypeScript со strict mode
 
 ## Архитектура
 
@@ -44,12 +45,14 @@ src/
 │   ├── auth/
 │   │   └── authSlice.ts     # Стейт авторизации + thunks (login, register, logout)
 │   └── todos/
-│       ├── todosSlice.ts    # Стейт задач + extraReducers
-│       └── todosThunks.ts   # CRUD thunks (fetch, add, delete, toggle)
+│       ├── todosSlice.ts      # Стейт задач + extraReducers
+│       ├── todosThunks.ts     # CRUD thunks (fetch, add, delete, toggle)
+│       └── useFilterStore.ts  # Zustand стор фильтров (persist + devtools)
 ├── pages/
 │   ├── LoginPage.tsx
 │   ├── RegisterPage.tsx
-│   └── TodosPage.tsx
+│   ├── TodosPage.tsx
+│   └── CounterPage.tsx        # Zustand демо
 ├── shared/
 │   ├── lib/
 │   │   └── supabase.ts      # Supabase client

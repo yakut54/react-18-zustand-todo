@@ -3,13 +3,15 @@ import { LoginPage } from "../pages/LoginPage";
 import { RegisterPage } from "../pages/RegisterPage";
 import { TodosPage } from "../pages/TodosPage";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { CounterPage } from "../pages/CounterPage";
 
-export default function Router() {
+const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/counter" element={<CounterPage />} />
         <Route
           path="/todos"
           element={
@@ -23,3 +25,5 @@ export default function Router() {
     </BrowserRouter>
   );
 }
+
+export default Router

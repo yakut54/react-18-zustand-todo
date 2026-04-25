@@ -7,9 +7,6 @@ export const fetchTodosThunk = createAsyncThunk<
   void,
   { rejectValue: string }
 >("todos/fetch", async (_, { rejectWithValue }) => {
-  const session = await supabase.auth.getSession();
-  console.log("fetch todos, session:", session.data.session?.user?.email);
-
   const { data, error } = await supabase
     .from("todos")
     .select("*")
@@ -57,4 +54,27 @@ export const deleteTodoThunk = createAsyncThunk<
   if (error) return rejectWithValue(error.message);
 
   return id;
+});
+
+export const toggleTodoThunk = createAsyncThunk<
+  Todo,
+  { id: string; completed: boolean },
+  { rejectValue: string }
+>("todos/toggle", async ({ id, completed }, { rejectWithValue }) => {
+  const { data, error } = await supabase
+    .from("todos")
+    .update({ completed: !completed })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) return rejectWithValue(error.message);
+
+  return {
+    id: data.id,
+    user_id: data.user_id,
+    title: data.title,
+    completed: data.completed,
+    created_at: data.created_at,
+  };
 });

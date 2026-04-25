@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { Todo } from "../../shared/types";
-import { fetchTodosThunk, addTodoThunk, deleteTodoThunk } from "./todosThunks";
+import {
+  fetchTodosThunk,
+  addTodoThunk,
+  deleteTodoThunk,
+  toggleTodoThunk,
+} from "./todosThunks";
 
 interface TodosState {
   items: Todo[];
@@ -39,10 +44,13 @@ const todosSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchTodosThunk.fulfilled, (state, action: PayloadAction<Todo[]>) => {
-        state.loading = false;
-        state.items = action.payload;
-      })
+      .addCase(
+        fetchTodosThunk.fulfilled,
+        (state, action: PayloadAction<Todo[]>) => {
+          state.loading = false;
+          state.items = action.payload;
+        },
+      )
       .addCase(fetchTodosThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Ошибка загрузки";
@@ -63,11 +71,29 @@ const todosSlice = createSlice({
       .addCase(deleteTodoThunk.pending, (state) => {
         state.error = null;
       })
-      .addCase(deleteTodoThunk.fulfilled, (state, action: PayloadAction<string>) => {
-        state.items = state.items.filter((t) => t.id !== action.payload);
-      })
+      .addCase(
+        deleteTodoThunk.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.items = state.items.filter((t) => t.id !== action.payload);
+        },
+      )
       .addCase(deleteTodoThunk.rejected, (state, action) => {
         state.error = action.payload ?? "Ошибка удаления";
+      });
+
+    builder
+      .addCase(toggleTodoThunk.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(
+        toggleTodoThunk.fulfilled,
+        (state, action: PayloadAction<Todo>) => {
+          const todo = state.items.find((t) => t.id === action.payload.id);
+          if (todo) todo.completed = action.payload.completed;
+        },
+      )
+      .addCase(toggleTodoThunk.rejected, (state, action) => {
+        state.error = action.payload ?? "Ошибка обновления";
       });
   },
 });

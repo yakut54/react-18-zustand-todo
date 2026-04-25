@@ -79,43 +79,53 @@
 
 ---
 
-## ДЕНЬ 3 — CRUD и Zustand ← СЕЙЧАС ЗДЕСЬ
+## ДЕНЬ 3 — CRUD и Zustand ✅ ГОТОВО
 
-### CRUD задач с Supabase
+### CRUD задач с Supabase ✅
 - ✅ `features/todos/todosThunks.ts` — отдельный файл для async операций
 - ✅ `fetchTodosThunk` — загрузка задач из Supabase при входе на TodosPage
 - ✅ `addTodoThunk` — добавление задачи с явным маппингом типов
+- ✅ `deleteTodoThunk` — удаление задачи
+- ✅ `toggleTodoThunk` — переключение completed через Supabase
 - ✅ Форма добавления задачи с controlled input
-- ✅ Список задач с CSS стилями
-- ⬜ `removeTodoThunk` — удаление задачи
-- ⬜ `toggleTodoThunk` — переключение completed
-- ⬜ Оптимистичные апдейты
+- ✅ Список задач с CSS стилями (hover, transitions, empty state)
 
-### Zustand
-- ⬜ `features/todos/useTodoFilters.ts` — стор фильтров (all/active/completed)
-- ⬜ Zustand с `persist` (сохранение фильтра в localStorage)
-- ⬜ Фильтрация списка задач
+### Zustand ✅
+- ✅ `features/todos/useFilterStore.ts` — стор фильтров (all/active/completed)
+- ✅ `persist` middleware — сохранение фильтра в localStorage
+- ✅ `devtools` middleware — интеграция с Redux DevTools
+- ✅ `useShallow` — оптимизация подписки, shallow сравнение
+- ✅ Фильтрация через `useMemo` на клиенте
+- ✅ `pages/CounterPage.tsx` — демо Zustand с комментариями для собеса
 
 ### React хуки — покрываем в процессе
 - ✅ `useState` — формы логина/регистрации, инпут добавления задачи
 - ✅ `useEffect` — initAuth при старте, загрузка задач
-- ⬜ `useMemo` — мемоизация отфильтрованного списка задач
+- ✅ `useMemo` — мемоизация отфильтрованного списка задач
 - ⬜ `useCallback` — стабилизация обработчиков в списке задач
 - ⬜ `useRef` — фокус на инпут при добавлении задачи
 - ⬜ `useId` — id для label/input в формах (accessibility)
 - ⬜ `useDeferredValue` — поиск по задачам без лагов (React 18+)
 - ⬜ `useTransition` — пометить фильтрацию как некритичный апдейт
 
-### Skeleton / загрузка
-- ⬜ Skeleton loaders пока грузятся задачи
+### Осталось ← СЕЙЧАС ЗДЕСЬ
+- ⬜ `useCallback` — оптимизация обработчиков
+- ⬜ `useRef` — фокус на инпут
+- ⬜ `useDeferredValue` — поиск
+- ⬜ Оптимистичные апдейты
+- ⬜ Skeleton loaders
 
 **Вопросы на собесе:**
 - Чем Zustand отличается от Redux?
 - Как работает подписка в Zustand?
 - Можно ли использовать Zustand и RTK вместе? (Да!)
-- Что такое `shallow` в Zustand?
+- Что такое `shallow` и `useShallow`?
+- Что такое `persist` middleware и как работает гидрация?
+- Что такое currying и зачем `create<T>()()`?
+- Зачем `devtools` и как назвать экшн в `set`?
 - Что такое оптимистичный апдейт и зачем он нужен?
 - Что такое `useDeferredValue` и когда использовать?
+- Что такое `useMemo` и когда НЕ стоит использовать?
 
 ---
 
