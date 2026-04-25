@@ -109,11 +109,43 @@
 - ⬜ `useTransition` — пометить фильтрацию как некритичный апдейт
 
 ### Осталось ← СЕЙЧАС ЗДЕСЬ
-- ⬜ `useCallback` — оптимизация обработчиков
+- ✅ `useCallback` — оптимизация обработчиков в TodosPage
 - ⬜ `useRef` — фокус на инпут
 - ⬜ `useDeferredValue` — поиск
 - ⬜ Оптимистичные апдейты
 - ⬜ Skeleton loaders
+
+---
+
+## БОНУС — RTK Query
+
+> Следующий уровень над `createAsyncThunk`. Знать после того как основа отработана.
+
+**Что это:** RTK Query автоматически генерирует хуки для запросов, кэширует данные, управляет loading/error сам — без `extraReducers` и `pending/fulfilled/rejected` вручную.
+
+**Сравнение:**
+```ts
+// createAsyncThunk — пишешь сам
+const fetchTodosThunk = createAsyncThunk('todos/fetch', async () => { ... })
+// + extraReducers в слайсе
+// + dispatch в компоненте
+// + items/loading/error из useAppSelector
+
+// RTK Query — генерируется автоматически
+const { data, isLoading, error } = useGetTodosQuery()
+```
+
+**Практика:**
+- ⬜ `store/api.ts` — `createApi` с baseQuery для Supabase
+- ⬜ Эндпоинты: `getTodos`, `addTodo`, `deleteTodo`, `toggleTodo`
+- ⬜ Подключить в `store/index.ts`
+- ⬜ Использовать хуки в `TodosPage`
+
+**Вопросы на собесе:**
+- Чем RTK Query отличается от `createAsyncThunk`?
+- Что такое кэш в RTK Query и как он инвалидируется?
+- Что такое `tags` и `providesTags` / `invalidatesTags`?
+- Когда использовать RTK Query, а когда `createAsyncThunk`?
 
 **Вопросы на собесе:**
 - Чем Zustand отличается от Redux?

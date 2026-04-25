@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { logoutThunk } from "../features/auth/authSlice";
 import {
@@ -34,29 +34,40 @@ export const TodosPage = () => {
     return items;
   }, [items, filter]);
 
-  const handleAdd = (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!title.trim()) return;
-    dispatch(addTodoThunk(title));
-    setTitle("");
-  };
+  const handleAdd = useCallback(
+    (e: React.SyntheticEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!title.trim()) return;
+      dispatch(addTodoThunk(title));
+      setTitle("");
+    },
+    [dispatch, title],
+  );
 
   useEffect(() => {
     dispatch(fetchTodosThunk());
   }, [dispatch]);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await dispatch(logoutThunk());
     navigate("/login");
-  };
+  }, [dispatch, navigate]);
 
-  const handleDelete = async (id: string) => {
-    await dispatch(deleteTodoThunk(id));
-  };
+  const handleDelete = useCallback(
+    async (id: string) => {
+      await dispatch(deleteTodoThunk(id));
+    },
+    [dispatch],
+  );
 
-  const toggleHandler = async (todo: Todo) => {
-    await dispatch(toggleTodoThunk({ id: todo.id, completed: todo.completed }));
-  };
+  const toggleHandler = useCallback(
+    async (todo: Todo) => {
+      await dispatch(
+        toggleTodoThunk({ id: todo.id, completed: todo.completed }),
+      );
+    },
+    [dispatch],
+  );
 
   if (loading) return <div>Загрузка...</div>;
   if (error) return <div>{error}</div>;
