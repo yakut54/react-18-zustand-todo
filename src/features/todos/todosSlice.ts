@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { Todo } from "../../shared/types";
-import { fetchTodosThunk, addTodoThunk } from "./todosThunks";
+import { fetchTodosThunk, addTodoThunk, deleteTodoThunk } from "./todosThunks";
 
 interface TodosState {
   items: Todo[];
@@ -57,6 +57,17 @@ const todosSlice = createSlice({
       })
       .addCase(addTodoThunk.rejected, (state, action) => {
         state.error = action.payload ?? "Ошибка добавления";
+      });
+
+    builder
+      .addCase(deleteTodoThunk.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(deleteTodoThunk.fulfilled, (state, action: PayloadAction<string>) => {
+        state.items = state.items.filter((t) => t.id !== action.payload);
+      })
+      .addCase(deleteTodoThunk.rejected, (state, action) => {
+        state.error = action.payload ?? "Ошибка удаления";
       });
   },
 });

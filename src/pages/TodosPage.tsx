@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { logoutThunk } from "../features/auth/authSlice";
-import { fetchTodosThunk, addTodoThunk } from "../features/todos/todosThunks";
+import { fetchTodosThunk, addTodoThunk, deleteTodoThunk } from "../features/todos/todosThunks";
 import { useNavigate } from "react-router-dom";
 import "./todos.css";
 
@@ -26,6 +26,10 @@ export const TodosPage = () => {
   const handleLogout = async () => {
     await dispatch(logoutThunk());
     navigate("/login");
+  };
+
+  const handleDelete = async (id: string) => {
+    await dispatch(deleteTodoThunk(id));
   };
 
   if (loading) return <div>Загрузка...</div>;
@@ -64,7 +68,7 @@ export const TodosPage = () => {
             <span className={todo.completed ? "completed" : ""}>
               {todo.title}
             </span>
-            <button>×</button>
+            <button onClick={() => handleDelete(todo.id)}>×</button>
           </li>
         ))}
       </ul>

@@ -38,11 +38,23 @@ export const addTodoThunk = createAsyncThunk<
 
   if (error) return rejectWithValue(error.message);
 
-  return {                                                                                                                                                                                    
-    id: data.id,                                                                                                                                                                              
-    user_id: data.user_id,                                                                                                                                                                    
-    title: data.title,                                      
+  return {
+    id: data.id,
+    user_id: data.user_id,
+    title: data.title,
     completed: data.completed,
     created_at: data.created_at,
   };
+});
+
+export const deleteTodoThunk = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>("todos/delete", async (id, { rejectWithValue }) => {
+  const { error } = await supabase.from("todos").delete().eq("id", id);
+
+  if (error) return rejectWithValue(error.message);
+
+  return id;
 });
