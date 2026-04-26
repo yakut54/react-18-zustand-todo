@@ -81,7 +81,7 @@ const TodosContent = () => {
   const handleAdd = useCallback(
     (e: React.SyntheticEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const value = titleRef.current.trim();
+      const value = (inputRef.current?.value ?? '').trim();
       if (!value) return;
       dispatch(addTodoThunk(value));
       setTitle("");
@@ -172,7 +172,7 @@ const TodosContent = () => {
                 titleRef.current = e.target.value;
               }}
             />
-            <button type="submit" onPointerDown={(e) => e.preventDefault()}>Добавить</button>
+            <button type="submit">Добавить</button>
           </form>
 
           <input
