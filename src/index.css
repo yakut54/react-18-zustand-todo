@@ -1,3 +1,23 @@
+:root {
+  --bg: #0a0a0a;
+  --bg-card: #111;
+  --bg-card-hover: #161616;
+  --border: #222;
+  --border-subtle: #1a1a1a;
+  --border-input: #2a2a2a;
+  --text-primary: #e8e8e8;
+  --text-secondary: #ccc;
+  --text-muted: #888;
+  --text-faint: #444;
+  --text-ghost: #333;
+  --text-completed: #555;
+  --accent: #00ff87;
+  --accent-fg: #000;
+  --danger: #ff6b6b;
+  --danger-bg: rgba(255, 107, 107, 0.08);
+  --danger-border: rgba(255, 107, 107, 0.2);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -7,6 +27,6 @@
 body {
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
-  background: #0a0a0a;
-  color: #e8e8e8;
+  background: var(--bg);
+  color: var(--text-primary);
 }
