@@ -86,6 +86,7 @@ const TodosContent = () => {
       dispatch(addTodoThunk(value));
       setTitle("");
       titleRef.current = "";
+      inputRef.current?.blur();
     },
     [dispatch],
   );
@@ -171,7 +172,7 @@ const TodosContent = () => {
                 titleRef.current = e.target.value;
               }}
             />
-            <button type="submit">Добавить</button>
+            <button type="submit" onPointerDown={(e) => e.preventDefault()}>Добавить</button>
           </form>
 
           <input
