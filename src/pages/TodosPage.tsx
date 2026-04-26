@@ -21,6 +21,7 @@ import { useShallow } from "zustand/react/shallow";
 import type { Todo } from "../shared/types";
 import "./todos.css";
 import { StatsTab } from "../features/todos/StatsTab";
+import { useTheme } from "../shared/lib/useTheme";
 
 const SkeletonList = () => (
   <ul className="todo-list">
@@ -55,6 +56,7 @@ export const TodosPage = () => {
   const deferredQuery = useDeferredValue(query);
   const [tab, setTab] = useState<"todos" | "stats">("todos");
   const [isPending, startTransition] = useTransition();
+  const { theme, toggle } = useTheme();
 
   // — ссылки
   const inputRef = useRef<HTMLInputElement>(null);
@@ -127,6 +129,9 @@ export const TodosPage = () => {
         <h1>Мои задачи</h1>
         <div className="todos-header-right">
           <span className="todos-user">{user?.email}</span>
+          <button className="theme-toggle-btn" onClick={toggle}>
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
           <button className="logout-btn" onClick={handleLogout}>
             Выйти
           </button>
