@@ -32,9 +32,11 @@
 - Поиск по задачам с useDeferredValue (React 18)
 - Оптимистичные апдейты для toggle — UI обновляется мгновенно, откат при ошибке
 - Skeleton loaders при загрузке задач
+- Виртуализация списка через TanStack Virtual (10 000+ элементов)
 - Zustand devtools + useShallow для оптимизации ререндеров
 - useMemo для мемоизации отфильтрованного списка
 - Полная типизация TypeScript со strict mode
+- `useId` для связки label/input в формах (accessibility)
 
 ## Архитектура
 

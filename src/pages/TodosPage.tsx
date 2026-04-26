@@ -62,8 +62,8 @@ export const TodosPage = () => {
   // — производные
   const filteredItems = useMemo(() => {
     let result = items;
-    if (filter === "active") return items.filter((t) => !t.completed);
-    if (filter === "completed") return items.filter((t) => t.completed);
+    if (filter === "active") result = result.filter((t) => !t.completed);
+    if (filter === "completed") result = result.filter((t) => t.completed);
     if (deferredQuery.trim()) {
       result = result.filter((t) =>
         t.title.toLowerCase().includes(deferredQuery.toLowerCase()),
@@ -136,15 +136,15 @@ export const TodosPage = () => {
       <div className="todo-tabs">
         <button
           className={tab === "todos" ? "active" : ""}
-          onClick={() => startTransition(() => setTab("todos"))}
+          onClick={() => setTab("todos")}
         >
           Задачи
         </button>
         <button
-          className={`${tab === "stats" ? "active" : ""} ${isPending ? "tab-pending" : ""}`}
-          onClick={() => startTransition(() => setTab("stats"))}
+          className={tab === "stats" ? "active" : ""}
+          onClick={() => setTab("stats")}
         >
-          {isPending ? "..." : "Статистика"}
+          Статистика
         </button>
       </div>
 
@@ -164,7 +164,7 @@ export const TodosPage = () => {
           <input
             className="todo-search"
             type="text"
-            placeholder="Поиск..."
+            placeholder={isPending ? "Фильтрация..." : "Поиск..."}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -172,19 +172,19 @@ export const TodosPage = () => {
           <div className="todo-filters">
             <button
               className={filter === "all" ? "active" : ""}
-              onClick={() => setFilter("all")}
+              onClick={() => startTransition(() => setFilter("all"))}
             >
               Все
             </button>
             <button
               className={filter === "active" ? "active" : ""}
-              onClick={() => setFilter("active")}
+              onClick={() => startTransition(() => setFilter("active"))}
             >
               Активные
             </button>
             <button
               className={filter === "completed" ? "active" : ""}
-              onClick={() => setFilter("completed")}
+              onClick={() => startTransition(() => setFilter("completed"))}
             >
               Выполненные
             </button>
@@ -218,7 +218,6 @@ export const TodosPage = () => {
       ) : (
         <StatsTab items={items} />
       )}
-
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { loginThunk } from "../features/auth/authSlice";
 import { useNavigate, Link } from "react-router-dom";
@@ -11,6 +11,8 @@ export const LoginPage = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const emailId = useId();
+  const passwordId = useId();
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,13 +28,17 @@ export const LoginPage = () => {
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
         <h1>Войти</h1>
+        <label htmlFor={emailId}>Email</label>
         <input
+          id={emailId}
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        <label htmlFor={passwordId}>Пароль</label>
         <input
+          id={passwordId}
           type="password"
           placeholder="Пароль"
           value={password}

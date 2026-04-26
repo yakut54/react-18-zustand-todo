@@ -24,10 +24,10 @@
 - ✅ **Concurrent Rendering** (не "Mode") — `createRoot` включает конкурентную логику
 - ✅ **`createRoot` вместо `ReactDOM.render`** — точка входа изменилась
 - ✅ **Strict Mode** — монтирует компонент дважды в dev, проверяет side effects
-- ⬜ **Automatic Batching** — в React 17 батчинг только в event handlers, в 18 везде
-- ⬜ **`useTransition`** — помечаем апдейт как "не срочный"
+- ✅ **Automatic Batching** — в React 17 батчинг только в event handlers, в 18 везде
+- ✅ **`useTransition`** — помечаем апдейт как "не срочный"
 - ✅ **`useDeferredValue`** — дефер тяжёлого вычисления (используем в поиске на Дне 3)
-- ⬜ **`useId`** — генерация уникальных ID
+- ✅ **`useId`** — генерация уникальных ID
 
 ### Практика ✅
 - ✅ Создан проект `vite + react-ts`
@@ -104,9 +104,9 @@
 - ✅ `useMemo` — мемоизация отфильтрованного списка задач
 - ✅ `useCallback` — стабилизация обработчиков в списке задач
 - ✅ `useRef` — фокус на инпут при добавлении задачи
-- ⬜ `useId` — id для label/input в формах (accessibility)
+- ✅ `useId` — id для label/input в формах (accessibility)
 - ✅ `useDeferredValue` — поиск по задачам без лагов (React 18+)
-- ⬜ `useTransition` — пометить фильтрацию как некритичный апдейт
+- ✅ `useTransition` — пометить фильтрацию как некритичный апдейт
 
 ### Теория разобрана в чате
 - ✅ `useEffect` — зависимости, cleanup, сравнение с useLayoutEffect
@@ -118,6 +118,22 @@
 - ✅ `useDeferredValue` — поиск по задачам без лагов
 - ✅ Оптимистичные апдейты — toggle мгновенный, откат при ошибке
 - ✅ Skeleton loaders
+
+---
+
+## БОНУС — Виртуализация (TanStack Virtual)
+
+> Для списков 10 000+ элементов. Рендерит только видимые строки — DOM не перегружается.
+
+**Практика:**
+- ⬜ `npm install @tanstack/react-virtual`
+- ⬜ Подключить `useVirtualizer` в `TodosPage`
+- ⬜ Рендерить только видимые `todo-item`
+
+**Вопросы на собесе:**
+- Что такое виртуализация списка?
+- Чем TanStack Virtual лучше react-window?
+- Когда виртуализация нужна, а когда избыточна?
 
 ---
 
