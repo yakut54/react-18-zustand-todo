@@ -78,18 +78,14 @@ const TodosContent = () => {
     return result;
   }, [items, filter, deferredQuery]);
 
-  const handleAdd = useCallback(
-    (e: React.SyntheticEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const value = (inputRef.current?.value ?? '').trim();
-      if (!value) return;
-      dispatch(addTodoThunk(value));
-      setTitle("");
-      titleRef.current = "";
-      inputRef.current?.blur();
-    },
-    [dispatch],
-  );
+  const handleAdd = useCallback(() => {
+    const value = (inputRef.current?.value ?? '').trim();
+    if (!value) return;
+    dispatch(addTodoThunk(value));
+    setTitle("");
+    titleRef.current = "";
+    inputRef.current?.blur();
+  }, [dispatch]);
 
   const handleLogout = useCallback(async () => {
     await dispatch(logoutThunk());
@@ -161,7 +157,7 @@ const TodosContent = () => {
 
       {tab === "todos" ? (
         <>
-          <form className="todo-form" onSubmit={handleAdd}>
+          <div className="todo-form">
             <input
               ref={inputRef}
               type="text"
@@ -171,9 +167,10 @@ const TodosContent = () => {
                 setTitle(e.target.value);
                 titleRef.current = e.target.value;
               }}
+              onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
             />
-            <button type="submit">Добавить</button>
-          </form>
+            <button type="button" onClick={handleAdd}>Добавить</button>
+          </div>
 
           <input
             className="todo-search"
