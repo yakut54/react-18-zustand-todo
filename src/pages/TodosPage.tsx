@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { logoutThunk } from "../features/auth/authSlice";
 import {
@@ -8,26 +8,30 @@ import {
   toggleTodoThunk,
 } from "../features/todos/todosThunks";
 import { useNavigate } from "react-router-dom";
-import "./todos.css";
-import type { Todo } from "../shared/types";
-import { useMemo } from "react";
 import { useFilterStore } from "../features/todos/useFilterStore";
 import { useShallow } from "zustand/react/shallow";
+import type { Todo } from "../shared/types";
+import "./todos.css";
 
 export const TodosPage = () => {
+  // — внешние зависимости
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  // — стор
   const { user } = useAppSelector((state) => state.auth);
   const { items, loading, error } = useAppSelector((state) => state.todos);
-  const [title, setTitle] = useState("");
-
   const { filter, setFilter } = useFilterStore(
-    useShallow((state) => ({
-      filter: state.filter,
-      setFilter: state.setFilter,
-    })),
+    useShallow((state) => ({ filter: state.filter, setFilter: state.setFilter }))
   );
 
+  // — локальный стейт
+  const [title, setTitle] = useState("");
+
+  // — ссылки
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // — производные
   const filteredItems = useMemo(() => {
     if (filter === "active") return items.filter((t) => !t.completed);
     if (filter === "completed") return items.filter((t) => t.completed);
@@ -41,12 +45,8 @@ export const TodosPage = () => {
       dispatch(addTodoThunk(title));
       setTitle("");
     },
-    [dispatch, title],
+    [dispatch, title]
   );
-
-  useEffect(() => {
-    dispatch(fetchTodosThunk());
-  }, [dispatch]);
 
   const handleLogout = useCallback(async () => {
     await dispatch(logoutThunk());
@@ -57,17 +57,24 @@ export const TodosPage = () => {
     async (id: string) => {
       await dispatch(deleteTodoThunk(id));
     },
-    [dispatch],
+    [dispatch]
   );
 
   const toggleHandler = useCallback(
     async (todo: Todo) => {
-      await dispatch(
-        toggleTodoThunk({ id: todo.id, completed: todo.completed }),
-      );
+      await dispatch(toggleTodoThunk({ id: todo.id, completed: todo.completed }));
     },
-    [dispatch],
+    [dispatch]
   );
+
+  // — эффекты
+  useEffect(() => {
+    dispatch(fetchTodosThunk());
+  }, [dispatch]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   if (loading) return <div>Загрузка...</div>;
   if (error) return <div>{error}</div>;
@@ -86,6 +93,7 @@ export const TodosPage = () => {
 
       <form className="todo-form" onSubmit={handleAdd}>
         <input
+          ref={inputRef}
           type="text"
           placeholder="Новая задача..."
           value={title}
@@ -95,22 +103,13 @@ export const TodosPage = () => {
       </form>
 
       <div className="todo-filters">
-        <button
-          className={filter === "all" ? "active" : ""}
-          onClick={() => setFilter("all")}
-        >
+        <button className={filter === "all" ? "active" : ""} onClick={() => setFilter("all")}>
           Все
         </button>
-        <button
-          className={filter === "active" ? "active" : ""}
-          onClick={() => setFilter("active")}
-        >
+        <button className={filter === "active" ? "active" : ""} onClick={() => setFilter("active")}>
           Активные
         </button>
-        <button
-          className={filter === "completed" ? "active" : ""}
-          onClick={() => setFilter("completed")}
-        >
+        <button className={filter === "completed" ? "active" : ""} onClick={() => setFilter("completed")}>
           Выполненные
         </button>
       </div>
@@ -123,15 +122,8 @@ export const TodosPage = () => {
               checked={todo.completed}
               onChange={() => toggleHandler(todo)}
             />
-            <span className={todo.completed ? "completed" : ""}>
-              {todo.title}
-            </span>
-            <button
-              className="todo-delete-btn"
-              onClick={() => handleDelete(todo.id)}
-            >
-              ×
-            </button>
+            <span className={todo.completed ? "completed" : ""}>{todo.title}</span>
+            <button className="todo-delete-btn" onClick={() => handleDelete(todo.id)}>×</button>
           </li>
         ))}
       </ul>
