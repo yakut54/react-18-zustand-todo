@@ -1,6 +1,6 @@
 # Todo App
 
-> Fullstack todo-приложение с авторизацией, real-time синхронизацией и современным стеком
+> Fullstack todo-приложение с авторизацией, синхронизацией с БД и современным стеком
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat&logo=typescript)
@@ -36,7 +36,6 @@
 - Подтверждение удаления через модалку (отдельный ConfirmContext)
 - Светлая/тёмная тема с переключателем (CSS переменные + localStorage)
 - Адаптивная вёрстка (медиа запросы)
-- Виртуализация списка через TanStack Virtual (10 000+ элементов)
 - Zustand devtools + useShallow для оптимизации ререндеров
 - useMemo для мемоизации отфильтрованного списка
 - Полная типизация TypeScript со strict mode
@@ -55,8 +54,15 @@ src/
 │   │   └── authSlice.ts     # Стейт авторизации + thunks (login, register, logout)
 │   └── todos/
 │       ├── todosSlice.ts      # Стейт задач + extraReducers
-│       ├── todosThunks.ts     # CRUD thunks (fetch, add, delete, toggle)
-│       └── useFilterStore.ts  # Zustand стор фильтров (persist + devtools)
+│       ├── todosThunks.ts     # CRUD thunks (fetch, add, delete, toggle, update)
+│       ├── useFilterStore.ts  # Zustand стор фильтров (persist + devtools)
+│       ├── StatsTab.tsx       # Статистика задач
+│       ├── ModalContext.tsx   # Context для модалки редактирования
+│       ├── useModal.ts        # Хук useModal
+│       ├── EditModal.tsx      # Модалка редактирования задачи
+│       ├── ConfirmContext.tsx  # Context для модалки подтверждения
+│       ├── useConfirm.ts      # Хук useConfirm
+│       └── ConfirmModal.tsx   # Модалка подтверждения удаления
 ├── pages/
 │   ├── LoginPage.tsx
 │   ├── RegisterPage.tsx
@@ -64,7 +70,8 @@ src/
 │   └── CounterPage.tsx        # Zustand демо
 ├── shared/
 │   ├── lib/
-│   │   └── supabase.ts      # Supabase client
+│   │   ├── supabase.ts      # Supabase client
+│   │   └── useTheme.ts      # Хук переключения темы
 │   └── types/
 │       └── index.ts         # Общие типы (Todo, User)
 └── store/
