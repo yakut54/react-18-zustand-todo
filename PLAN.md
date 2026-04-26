@@ -121,6 +121,31 @@
 
 ---
 
+## ДЕНЬ 4 — Docker + CI/CD
+
+### Docker
+- ⬜ `Dockerfile` — nginx раздаёт собранный `dist/`
+- ⬜ `.dockerignore`
+- ⬜ Локально проверить: `docker build` + `docker run`
+
+### CI/CD — GitHub Actions
+- ⬜ Создать репо на GitHub
+- ⬜ `.github/workflows/deploy.yml` — при пуше в `main`:
+  - `tsc` — проверка типов
+  - `vite build` — сборка
+  - Деплой `dist/` на Beget по SSH
+- ⬜ Создать поддомен на Beget
+- ⬜ Настроить nginx на сервере
+- ⬜ GitHub Secrets: SSH ключ, хост, путь
+
+**Вопросы на собесе:**
+- Что такое CI/CD?
+- Зачем Docker для фронтенда?
+- Что такое GitHub Actions и как работают workflows?
+- Что такое GitHub Secrets и зачем?
+
+---
+
 ## БОНУС — Виртуализация (TanStack Virtual)
 
 > Для списков 10 000+ элементов. Рендерит только видимые строки — DOM не перегружается.
