@@ -4,6 +4,7 @@
   --bg-card-hover: #161616;
   --border: #222;
   --border-subtle: #1a1a1a;
+  --skeleton: #2a2a2a;
   --border-input: #2a2a2a;
   --text-primary: #f2f2f2;
   --text-secondary: #e0e0e0;
@@ -24,6 +25,7 @@
   --bg-card-hover: #fafafa;
   --border: #e0e0e0;
   --border-subtle: #ebebeb;
+  --skeleton: #e0e0e0;
   --border-input: #d0d0d0;
   --text-primary: #050505;
   --text-secondary: #0f0f0f;
