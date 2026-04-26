@@ -172,12 +172,12 @@ const { data, isLoading, error } = useGetTodosQuery()
 ### Вопросы на собесе — повторение
 
 #### React
-- Что такое reconciliation?
-- Как работает Virtual DOM?
-- Разница `useEffect` vs `useLayoutEffect`?
-- Когда использовать `useCallback` и `useMemo`?
-- Что такое `React.memo` и когда не поможет?
-- Как работает Context и почему перерендеривает всё дерево?
+- 🎯 Что такое reconciliation?
+- 🎯 Как работает Virtual DOM?
+- 🎯 Разница `useEffect` vs `useLayoutEffect`?
+- 🎯 Когда использовать `useCallback` и `useMemo`?
+- 🎯 Что такое `React.memo` и когда не поможет?
+- 🎯 Как работает Context и почему перерендеривает всё дерево?
 - Что такое `key` и почему нельзя использовать index?
 
 #### TypeScript
