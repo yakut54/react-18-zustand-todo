@@ -68,6 +68,12 @@ src/
     └── hooks.ts             # useAppSelector, useAppDispatch
 ```
 
+## Деплой
+
+Приложение задеплоено на: **https://todo.yakut54.ru**
+
+CI/CD: пуш в `main` → GitHub Actions собирает Docker образ → деплоит на Beget сервер по SSH.
+
 ## Запуск локально
 
 ```bash

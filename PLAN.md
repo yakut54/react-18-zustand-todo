@@ -123,20 +123,21 @@
 
 ## ДЕНЬ 4 — Docker + CI/CD
 
-### Docker
-- ⬜ `Dockerfile` — nginx раздаёт собранный `dist/`
-- ⬜ `.dockerignore`
-- ⬜ Локально проверить: `docker build` + `docker run`
+### Docker ✅
+- ✅ `Dockerfile` — nginx раздаёт собранный `dist/`
+- ✅ `.dockerignore`
+- ✅ Локально проверить: `docker build` + `docker run`
 
-### CI/CD — GitHub Actions
-- ⬜ Создать репо на GitHub
-- ⬜ `.github/workflows/deploy.yml` — при пуше в `main`:
-  - `tsc` — проверка типов
-  - `vite build` — сборка
-  - Деплой `dist/` на Beget по SSH
-- ⬜ Создать поддомен на Beget
-- ⬜ Настроить nginx на сервере
-- ⬜ GitHub Secrets: SSH ключ, хост, путь
+### CI/CD — GitHub Actions ✅
+- ✅ Создать репо на GitHub
+- ✅ `.github/workflows/deploy.yml` — при пуше в `main`:
+  - `docker build` с `--build-arg` для Vite переменных
+  - `scp` образа на сервер
+  - `ssh` деплой через `docker compose up -d`
+- ✅ Создать поддомен на Beget — `todo.yakut54.ru`
+- ✅ Настроить nginx на сервере (proxy_pass → порт 3002)
+- ✅ SSL сертификат через Let's Encrypt (certbot)
+- ✅ GitHub Secrets: SSH ключ, хост, юзер, Supabase переменные
 
 **Вопросы на собесе:**
 - Что такое CI/CD?
