@@ -41,6 +41,10 @@ const todosSlice = createSlice({
       const todo = state.items.find((t) => t.id === action.payload);
       if (todo) todo.completed = !todo.completed;
     },
+    updateTodo: (state, action: PayloadAction<{ id: string; title: string }>) => {
+      const todo = state.items.find((t) => t.id === action.payload.id);
+      if (todo) todo.title = action.payload.title;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -102,5 +106,5 @@ const todosSlice = createSlice({
   },
 });
 
-export const { setTodos, addTodo, removeTodo, toggleTodo, revertToggleTodo } = todosSlice.actions;
+export const { setTodos, addTodo, removeTodo, toggleTodo, revertToggleTodo, updateTodo } = todosSlice.actions;
 export default todosSlice.reducer;

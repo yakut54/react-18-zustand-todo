@@ -22,6 +22,12 @@ import type { Todo } from "../shared/types";
 import "./todos.css";
 import { StatsTab } from "../features/todos/StatsTab";
 import { useTheme } from "../shared/lib/useTheme";
+import { ModalProvider } from "../features/todos/ModalContext";
+import { EditModal } from "../features/todos/EditModal";
+import { useModal } from "../features/todos/useModal";
+import { ConfirmProvider } from "../features/todos/ConfirmContext";
+import { ConfirmModal } from "../features/todos/ConfirmModal";
+import { useConfirm } from "../features/todos/useConfirm";
 
 const SkeletonList = () => (
   <ul className="todo-list">
@@ -35,12 +41,10 @@ const SkeletonList = () => (
   </ul>
 );
 
-export const TodosPage = () => {
-  // — внешние зависимости
+const TodosContent = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  // — стор
   const { user } = useAppSelector((state) => state.auth);
   const { items, loading, error } = useAppSelector((state) => state.todos);
   const { filter, setFilter } = useFilterStore(
@@ -50,18 +54,17 @@ export const TodosPage = () => {
     })),
   );
 
-  // — локальный стейт
   const [title, setTitle] = useState("");
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
   const [tab, setTab] = useState<"todos" | "stats">("todos");
   const [isPending, startTransition] = useTransition();
   const { theme, toggle } = useTheme();
+  const { openModal } = useModal();
+  const { openConfirm } = useConfirm();
 
-  // — ссылки
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // — производные
   const filteredItems = useMemo(() => {
     let result = items;
     if (filter === "active") result = result.filter((t) => !t.completed);
@@ -105,7 +108,6 @@ export const TodosPage = () => {
     [dispatch],
   );
 
-  // — эффекты
   useEffect(() => {
     dispatch(fetchTodosThunk());
   }, [dispatch]);
@@ -203,12 +205,15 @@ export const TodosPage = () => {
                   checked={todo.completed}
                   onChange={() => toggleHandler(todo)}
                 />
-                <span className={todo.completed ? "completed" : ""}>
+                <span
+                  className={todo.completed ? "completed" : ""}
+                  onClick={() => openModal(todo)}
+                >
                   {todo.title}
                 </span>
                 <button
                   className="todo-delete-btn"
-                  onClick={() => handleDelete(todo.id)}
+                  onClick={() => openConfirm(`Удалить задачу «${todo.title}»?`, () => handleDelete(todo.id))}
                 >
                   ×
                 </button>
@@ -226,3 +231,18 @@ export const TodosPage = () => {
     </div>
   );
 };
+
+const EditModalWrapper = () => {
+  const { todo } = useModal()
+  return <EditModal key={todo?.id} />
+}
+
+export const TodosPage = () => (
+  <ConfirmProvider>
+    <ModalProvider>
+      <TodosContent />
+      <EditModalWrapper />
+      <ConfirmModal />
+    </ModalProvider>
+  </ConfirmProvider>
+);

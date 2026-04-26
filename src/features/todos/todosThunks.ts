@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../../shared/lib/supabase";
 import type { Todo } from "../../shared/types";
-import { revertToggleTodo, toggleTodo } from "./todosSlice";
+import { revertToggleTodo, toggleTodo, updateTodo } from "./todosSlice";
 
 export const fetchTodosThunk = createAsyncThunk<
   Todo[],
@@ -55,6 +55,21 @@ export const deleteTodoThunk = createAsyncThunk<
   if (error) return rejectWithValue(error.message);
 
   return id;
+});
+
+export const updateTodoThunk = createAsyncThunk<
+  void,
+  { id: string; title: string },
+  { rejectValue: string }
+>("todos/update", async ({ id, title }, { dispatch, rejectWithValue }) => {
+  dispatch(updateTodo({ id, title }));
+
+  const { error } = await supabase
+    .from("todos")
+    .update({ title })
+    .eq("id", id);
+
+  if (error) return rejectWithValue(error.message);
 });
 
 export const toggleTodoThunk = createAsyncThunk<
