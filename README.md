@@ -29,6 +29,9 @@
 - Защищённые роуты через ProtectedRoute
 - CRUD задач с синхронизацией с PostgreSQL
 - Фильтрация задач (all / active / completed) через Zustand + persist
+- Поиск по задачам с useDeferredValue (React 18)
+- Оптимистичные апдейты для toggle — UI обновляется мгновенно, откат при ошибке
+- Skeleton loaders при загрузке задач
 - Zustand devtools + useShallow для оптимизации ререндеров
 - useMemo для мемоизации отфильтрованного списка
 - Полная типизация TypeScript со strict mode

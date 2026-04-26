@@ -2,11 +2,6 @@
   box-sizing: border-box;
 }
 
-.todos-page {
-  min-height: 100vh;
-  background: #0f0f13;
-}
-
 .todos-container {
   max-width: 660px;
   margin: 0 auto;
@@ -24,8 +19,8 @@
 .todos-header h1 {
   font-size: 2rem;
   font-weight: 700;
-  letter-spacing: -0.03em;
-  background: linear-gradient(135deg, #fff 60%, #a5b4fc);
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #fff 50%, #c4b5fd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -39,39 +34,76 @@
 
 .todos-user {
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .logout-btn {
-  padding: 0.5rem 1rem;
+  padding: 0.4375rem 0.875rem;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
   font-size: 0.8125rem;
   font-family: inherit;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.35);
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 
 .logout-btn:hover {
-  border-color: rgba(239, 68, 68, 0.5);
-  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+/* Tabs */
+.todo-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0;
+}
+
+.todo-tabs button {
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  background: transparent;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.todo-tabs button:hover {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.todo-tabs button.active {
+  color: #fff;
+  border-bottom-color: #a78bfa;
+}
+
+.todo-tabs button.tab-pending {
+  color: #a78bfa;
 }
 
 /* Form */
 .todo-form {
   display: flex;
   gap: 0.625rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .todo-form input {
   flex: 1;
   padding: 0.875rem 1.125rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
   font-size: 0.9375rem;
   font-family: inherit;
   color: #fff;
@@ -80,27 +112,27 @@
 }
 
 .todo-form input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .todo-form input:focus {
-  border-color: #6366f1;
-  background: rgba(99, 102, 241, 0.08);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  border-color: rgba(167, 139, 250, 0.5);
+  background: rgba(139, 92, 246, 0.05);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
 .todo-form button {
   padding: 0.875rem 1.375rem;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
   color: #fff;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 0.9375rem;
   font-family: inherit;
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.15s, transform 0.1s;
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   white-space: nowrap;
 }
 
@@ -112,6 +144,30 @@
   transform: scale(0.97);
 }
 
+/* Search */
+.todo-search {
+  width: 100%;
+  padding: 0.75rem 1.125rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: #fff;
+  outline: none;
+  margin-bottom: 1rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.todo-search::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.todo-search:focus {
+  border-color: rgba(167, 139, 250, 0.5);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
 /* Filters */
 .todo-filters {
   display: flex;
@@ -121,25 +177,25 @@
 
 .todo-filters button {
   padding: 0.375rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 20px;
   background: transparent;
   font-size: 0.8125rem;
   font-family: inherit;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.35);
   cursor: pointer;
   transition: all 0.15s;
 }
 
 .todo-filters button:hover {
-  border-color: rgba(99, 102, 241, 0.5);
-  color: #a5b4fc;
+  border-color: rgba(167, 139, 250, 0.4);
+  color: #c4b5fd;
 }
 
 .todo-filters button.active {
-  background: rgba(99, 102, 241, 0.2);
-  border-color: rgba(99, 102, 241, 0.5);
-  color: #a5b4fc;
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(167, 139, 250, 0.4);
+  color: #c4b5fd;
   font-weight: 500;
 }
 
@@ -153,26 +209,32 @@
   gap: 0.5rem;
 }
 
+.todo-list.pending {
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
 .todo-item {
   display: flex;
   align-items: center;
   gap: 0.875rem;
   padding: 1rem 1.125rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  transition: background 0.15s, border-color 0.15s;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 14px;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
 
 .todo-item:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .todo-item input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #6366f1;
+  accent-color: #a78bfa;
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -180,20 +242,20 @@
 .todo-item span {
   flex: 1;
   font-size: 0.9375rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.8);
   line-height: 1.4;
   transition: color 0.15s;
 }
 
 .todo-item span.completed {
   text-decoration: line-through;
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .todo-delete-btn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.12);
   font-size: 1.25rem;
   cursor: pointer;
   transition: color 0.15s;
@@ -203,23 +265,82 @@
 }
 
 .todo-delete-btn:hover {
-  color: #f87171;
+  color: #fca5a5;
 }
 
 /* Empty state */
 .todos-empty {
   text-align: center;
   padding: 4rem 0;
-}
-
-.todos-empty p {
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.18);
   font-size: 0.9375rem;
 }
 
 /* Stats */
 .todos-stats {
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.22);
   margin-bottom: 0.875rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 18px;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.stat-card:hover {
+  background: rgba(255, 255, 255, 0.055);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(167, 139, 250, 0.1);
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #fff 40%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.02em;
+}
+
+/* Skeleton */
+.skeleton-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.125rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 14px;
+}
+
+.skeleton-box {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
 }

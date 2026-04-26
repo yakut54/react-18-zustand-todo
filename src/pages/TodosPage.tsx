@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useDeferredValue,
+  useTransition,
+} from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { logoutThunk } from "../features/auth/authSlice";
 import {
@@ -12,6 +20,19 @@ import { useFilterStore } from "../features/todos/useFilterStore";
 import { useShallow } from "zustand/react/shallow";
 import type { Todo } from "../shared/types";
 import "./todos.css";
+import { StatsTab } from "../features/todos/StatsTab";
+
+const SkeletonList = () => (
+  <ul className="todo-list">
+    {Array.from({ length: 4 }).map((_, i) => (
+      <li key={i} className="skeleton-item">
+        <div className="skeleton-box" style={{ width: 18, height: 18 }} />
+        <div className="skeleton-box" style={{ flex: 1, height: 16 }} />
+        <div className="skeleton-box" style={{ width: 20, height: 20 }} />
+      </li>
+    ))}
+  </ul>
+);
 
 export const TodosPage = () => {
   // — внешние зависимости
@@ -22,21 +43,34 @@ export const TodosPage = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { items, loading, error } = useAppSelector((state) => state.todos);
   const { filter, setFilter } = useFilterStore(
-    useShallow((state) => ({ filter: state.filter, setFilter: state.setFilter }))
+    useShallow((state) => ({
+      filter: state.filter,
+      setFilter: state.setFilter,
+    })),
   );
 
   // — локальный стейт
   const [title, setTitle] = useState("");
+  const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+  const [tab, setTab] = useState<"todos" | "stats">("todos");
+  const [isPending, startTransition] = useTransition();
 
   // — ссылки
   const inputRef = useRef<HTMLInputElement>(null);
 
   // — производные
   const filteredItems = useMemo(() => {
+    let result = items;
     if (filter === "active") return items.filter((t) => !t.completed);
     if (filter === "completed") return items.filter((t) => t.completed);
-    return items;
-  }, [items, filter]);
+    if (deferredQuery.trim()) {
+      result = result.filter((t) =>
+        t.title.toLowerCase().includes(deferredQuery.toLowerCase()),
+      );
+    }
+    return result;
+  }, [items, filter, deferredQuery]);
 
   const handleAdd = useCallback(
     (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -45,7 +79,7 @@ export const TodosPage = () => {
       dispatch(addTodoThunk(title));
       setTitle("");
     },
-    [dispatch, title]
+    [dispatch, title],
   );
 
   const handleLogout = useCallback(async () => {
@@ -57,14 +91,16 @@ export const TodosPage = () => {
     async (id: string) => {
       await dispatch(deleteTodoThunk(id));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const toggleHandler = useCallback(
     async (todo: Todo) => {
-      await dispatch(toggleTodoThunk({ id: todo.id, completed: todo.completed }));
+      await dispatch(
+        toggleTodoThunk({ id: todo.id, completed: todo.completed }),
+      );
     },
-    [dispatch]
+    [dispatch],
   );
 
   // — эффекты
@@ -76,7 +112,13 @@ export const TodosPage = () => {
     inputRef.current?.focus();
   }, []);
 
-  if (loading) return <div>Загрузка...</div>;
+  if (loading)
+    return (
+      <div className="todos-container">
+        <SkeletonList />
+      </div>
+    );
+
   if (error) return <div>{error}</div>;
 
   return (
@@ -91,46 +133,92 @@ export const TodosPage = () => {
         </div>
       </div>
 
-      <form className="todo-form" onSubmit={handleAdd}>
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Новая задача..."
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <button type="submit">Добавить</button>
-      </form>
-
-      <div className="todo-filters">
-        <button className={filter === "all" ? "active" : ""} onClick={() => setFilter("all")}>
-          Все
+      <div className="todo-tabs">
+        <button
+          className={tab === "todos" ? "active" : ""}
+          onClick={() => startTransition(() => setTab("todos"))}
+        >
+          Задачи
         </button>
-        <button className={filter === "active" ? "active" : ""} onClick={() => setFilter("active")}>
-          Активные
-        </button>
-        <button className={filter === "completed" ? "active" : ""} onClick={() => setFilter("completed")}>
-          Выполненные
+        <button
+          className={`${tab === "stats" ? "active" : ""} ${isPending ? "tab-pending" : ""}`}
+          onClick={() => startTransition(() => setTab("stats"))}
+        >
+          {isPending ? "..." : "Статистика"}
         </button>
       </div>
 
-      <ul className="todo-list">
-        {filteredItems.map((todo) => (
-          <li key={todo.id} className="todo-item">
+      {tab === "todos" ? (
+        <>
+          <form className="todo-form" onSubmit={handleAdd}>
             <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleHandler(todo)}
+              ref={inputRef}
+              type="text"
+              placeholder="Новая задача..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
-            <span className={todo.completed ? "completed" : ""}>{todo.title}</span>
-            <button className="todo-delete-btn" onClick={() => handleDelete(todo.id)}>×</button>
-          </li>
-        ))}
-      </ul>
+            <button type="submit">Добавить</button>
+          </form>
 
-      {filteredItems.length === 0 && (
-        <p className="todos-empty">Задач нет. Добавь первую!</p>
+          <input
+            className="todo-search"
+            type="text"
+            placeholder="Поиск..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+
+          <div className="todo-filters">
+            <button
+              className={filter === "all" ? "active" : ""}
+              onClick={() => setFilter("all")}
+            >
+              Все
+            </button>
+            <button
+              className={filter === "active" ? "active" : ""}
+              onClick={() => setFilter("active")}
+            >
+              Активные
+            </button>
+            <button
+              className={filter === "completed" ? "active" : ""}
+              onClick={() => setFilter("completed")}
+            >
+              Выполненные
+            </button>
+          </div>
+
+          <ul className="todo-list">
+            {filteredItems.map((todo) => (
+              <li key={todo.id} className="todo-item">
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => toggleHandler(todo)}
+                />
+                <span className={todo.completed ? "completed" : ""}>
+                  {todo.title}
+                </span>
+                <button
+                  className="todo-delete-btn"
+                  onClick={() => handleDelete(todo.id)}
+                >
+                  ×
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          {filteredItems.length === 0 && (
+            <p className="todos-empty">Задач нет. Добавь первую!</p>
+          )}
+        </>
+      ) : (
+        <StatsTab items={items} />
       )}
+
     </div>
   );
 };
