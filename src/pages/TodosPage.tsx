@@ -64,6 +64,7 @@ const TodosContent = () => {
   const { openConfirm } = useConfirm();
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const titleRef = useRef('');
 
   const filteredItems = useMemo(() => {
     let result = items;
@@ -80,11 +81,13 @@ const TodosContent = () => {
   const handleAdd = useCallback(
     (e: React.SyntheticEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (!title.trim()) return;
-      dispatch(addTodoThunk(title));
+      const value = titleRef.current.trim();
+      if (!value) return;
+      dispatch(addTodoThunk(value));
       setTitle("");
+      titleRef.current = "";
     },
-    [dispatch, title],
+    [dispatch],
   );
 
   const handleLogout = useCallback(async () => {
@@ -163,7 +166,10 @@ const TodosContent = () => {
               type="text"
               placeholder="Новая задача..."
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                titleRef.current = e.target.value;
+              }}
             />
             <button type="submit">Добавить</button>
           </form>
