@@ -102,3 +102,14 @@
   letter-spacing: 0.02em;
   margin-bottom: -0.25rem;
 }
+
+/* Media queries */
+@media (max-width: 480px) {
+  .auth-form {
+    padding: 1.75rem 1.25rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    max-width: 100%;
+  }
+}

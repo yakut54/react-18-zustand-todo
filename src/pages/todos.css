@@ -359,3 +359,39 @@
 .todo-tabs button.tab-pending {
   border: 1px solid #00ff87;
 }
+
+/* Media queries */
+@media (max-width: 480px) {
+  .todos-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .todos-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .todos-user {
+    display: none;
+  }
+
+  .todo-form {
+    flex-direction: column;
+  }
+
+  .todo-form button {
+    width: 100%;
+    padding: 0.875rem;
+  }
+
+  .todo-tabs button {
+    padding: 0.5rem 0.875rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .stat-card {
+    padding: 1.75rem 0.75rem;
+  }
+}
