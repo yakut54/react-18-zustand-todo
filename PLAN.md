@@ -124,7 +124,7 @@
 - ✅ Медиа запросы (мобильная адаптация)
 - ✅ Защита от дубликатов — getState на фронте + UNIQUE constraint в БД
 - ✅ Drag-to-scroll — useDragScroll хук (mousedown/mousemove/mouseup на window)
-- ✅ Мобильное редактирование — двойной тап (onTouchEnd + useRef таймер) + карандашик
+- ✅ Мобильное редактирование — двойной тап (onTouchEnd + useRef таймер) + карандашик.
 - ✅ Кастомный скроллбар (webkit + Firefox scrollbar-width)
 
 ---

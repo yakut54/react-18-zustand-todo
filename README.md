@@ -29,7 +29,7 @@
 - Защищённые роуты через ProtectedRoute
 - CRUD задач с синхронизацией с PostgreSQL
 - Фильтрация задач (all / active / completed) через Zustand + persist
-- Поиск по задачам с useDeferredValue (React 18)
+- Поиск по задачам с useDeferredValue (React 19)
 - Оптимистичные апдейты для toggle — UI обновляется мгновенно, откат при ошибке
 - Skeleton loaders при загрузке задач
 - Inline редактирование задачи — двойной клик / двойной тап на мобиле + кнопка карандашика
