@@ -42,7 +42,6 @@
 - useMemo для мемоизации отфильтрованного списка
 - Виртуализация списка через TanStack Virtual — рендерит только видимые строки
 - Полная типизация TypeScript со strict mode
-- `useId` для связки label/input в формах (accessibility)
 
 ## Архитектура
 
@@ -60,12 +59,11 @@ src/
 │       ├── todosThunks.ts     # CRUD thunks (fetch, add, delete, toggle, update)
 │       ├── useFilterStore.ts  # Zustand стор фильтров (persist + devtools)
 │       ├── StatsTab.tsx       # Статистика задач
-│       ├── ModalContext.tsx   # Context для модалки редактирования
-│       ├── useModal.ts        # Хук useModal
-│       ├── EditModal.tsx      # Модалка редактирования задачи
-│       ├── ConfirmContext.tsx  # Context для модалки подтверждения
-│       ├── useConfirm.ts      # Хук useConfirm
-│       └── ConfirmModal.tsx   # Модалка подтверждения удаления
+│       ├── TodoItem.tsx       # Компонент одной задачи
+│       ├── useTodos.ts        # Хук: RTK стейт + логаут + toggle
+│       ├── useInlineEdit.ts   # Хук: inline редактирование задачи
+│       ├── useUndoDelete.ts   # Хук: undo удаления с таймером
+│       └── useDragScroll.ts   # Хук: drag-to-scroll для списка
 ├── pages/
 │   ├── LoginPage.tsx
 │   ├── RegisterPage.tsx
