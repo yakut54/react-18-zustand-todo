@@ -5,7 +5,11 @@
 .todos-container {
   max-width: 660px;
   margin: 0 auto;
-  padding: 3rem 1.25rem;
+  padding: 3rem 1.25rem 1.5rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* Header */
@@ -394,7 +398,8 @@
 
 /* Virtual list */
 .todo-list-scroll {
-  height: 480px;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   border: 1px solid var(--border-subtle);
   border-radius: 4px;
