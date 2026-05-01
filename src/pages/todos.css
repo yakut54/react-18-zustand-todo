@@ -324,8 +324,7 @@
 }
 
 @media (max-width: 768px) {
-  .todo-edit-btn,
-  .todo-delete-btn {
+  .todo-edit-btn {
     opacity: 1;
   }
 }
@@ -349,6 +348,12 @@
 
 .todo-delete-btn:hover {
   color: var(--danger);
+}
+
+@media (max-width: 768px) {
+  .todo-delete-btn {
+    opacity: 1;
+  }
 }
 
 /* Inline edit */
