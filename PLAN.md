@@ -156,9 +156,10 @@
 > Для списков 10 000+ элементов. Рендерит только видимые строки — DOM не перегружается.
 
 **Практика:**
-- ⬜ `npm install @tanstack/react-virtual`
-- ⬜ Подключить `useVirtualizer` в `TodosPage`
-- ⬜ Рендерить только видимые `todo-item`
+- ✅ `npm install @tanstack/react-virtual`
+- ✅ Подключить `useVirtualizer` в `TodosPage`
+- ✅ Рендерить только видимые `todo-item`
+- ✅ CSS layout: `height: 100vh` + `min-height: 0` на flex-child
 
 **Вопросы на собесе:**
 - Что такое виртуализация списка?

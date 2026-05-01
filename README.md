@@ -38,6 +38,7 @@
 - Адаптивная вёрстка (медиа запросы)
 - Zustand devtools + useShallow для оптимизации ререндеров
 - useMemo для мемоизации отфильтрованного списка
+- Виртуализация списка через TanStack Virtual — рендерит только видимые строки
 - Полная типизация TypeScript со strict mode
 - `useId` для связки label/input в формах (accessibility)
 
