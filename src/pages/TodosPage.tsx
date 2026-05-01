@@ -53,6 +53,16 @@ export const TodosPage = () => {
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
   const [tab, setTab] = useState<"todos" | "stats">("todos");
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
+
+  const [pendingDelete, setPendingDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+  const deleteTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [isPending, startTransition] = useTransition();
   const { theme, toggle } = useTheme();
 
@@ -68,8 +78,9 @@ export const TodosPage = () => {
         t.title.toLowerCase().includes(deferredQuery.toLowerCase()),
       );
     }
+    if (pendingDelete) result = result.filter((t) => t.id !== pendingDelete.id);
     return result;
-  }, [items, filter, deferredQuery]);
+  }, [items, filter, deferredQuery, pendingDelete]);
 
   const handleAdd = useCallback(() => {
     const value = (inputRef.current?.value ?? "").trim();
@@ -86,11 +97,21 @@ export const TodosPage = () => {
   }, [dispatch, navigate]);
 
   const handleDelete = useCallback(
-    async (id: string) => {
-      await dispatch(deleteTodoThunk(id));
+    (todo: Todo) => {
+      setPendingDelete({ id: todo.id, title: todo.title });
+
+      deleteTimerRef.current = setTimeout(() => {
+        dispatch(deleteTodoThunk(todo.id));
+        setPendingDelete(null);
+      }, 5000);
     },
     [dispatch],
   );
+
+  const handleUndoDelete = useCallback(() => {
+    if (deleteTimerRef.current) clearTimeout(deleteTimerRef.current);
+    setPendingDelete(null);
+  }, []);
 
   const toggleHandler = useCallback(
     async (todo: Todo) => {
@@ -100,9 +121,6 @@ export const TodosPage = () => {
     },
     [dispatch],
   );
-
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState("");
 
   const handleEditStart = useCallback((todo: Todo) => {
     setEditingId(todo.id);
@@ -250,10 +268,10 @@ export const TodosPage = () => {
                     {todo.title}
                   </span>
                 )}
-                
+
                 <button
                   className="todo-delete-btn"
-                  onClick={() => handleDelete(todo.id)}
+                  onClick={() => handleDelete(todo)}
                 >
                   ×
                 </button>
@@ -267,6 +285,13 @@ export const TodosPage = () => {
         </>
       ) : (
         <StatsTab items={items} />
+      )}
+
+      {pendingDelete && (
+        <div className="undo-toast">
+          <span>Удалено: «{pendingDelete.title}»</span>
+          <button onClick={handleUndoDelete}>Отменить</button>
+        </div>
       )}
     </div>
   );

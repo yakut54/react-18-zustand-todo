@@ -278,17 +278,37 @@
 .todo-delete-btn {
   background: none;
   border: none;
-  color: var(--border-input);
+  color: var(--text-ghost);
   font-size: 1.25rem;
   cursor: pointer;
   transition: color 0.15s;
   line-height: 1;
   padding: 0 0.25rem;
   flex-shrink: 0;
+  opacity: 0;
+}
+
+.todo-item:hover .todo-delete-btn {
+  opacity: 1;
 }
 
 .todo-delete-btn:hover {
   color: var(--danger);
+}
+
+/* Inline edit */
+.todo-edit-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--accent);
+  border-radius: 0;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: var(--text-primary);
+  outline: none;
+  padding: 0 0.125rem;
+  line-height: 1.4;
 }
 
 /* Empty state */
@@ -371,6 +391,72 @@
   }
 }
 
+
+/* Undo toast */
+.undo-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  animation: toast-in 0.2s ease forwards;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.undo-toast::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  animation: toast-timer 5s linear forwards;
+  transform-origin: left;
+}
+
+@keyframes toast-timer {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+.undo-toast button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.15s;
+}
+
+.undo-toast button:hover {
+  opacity: 0.7;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
 
 /* Media queries */
 @media (max-width: 480px) {
