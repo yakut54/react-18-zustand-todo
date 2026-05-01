@@ -67,6 +67,12 @@ export const TodoItem = ({
         </span>
       )}
 
+      {editingId !== todo.id && (
+        <button className="todo-edit-btn" onClick={() => onEditStart(todo)}>
+          ✎
+        </button>
+      )}
+
       <button className="todo-delete-btn" onClick={() => onDelete(todo)}>
         ×
       </button>

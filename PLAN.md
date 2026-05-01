@@ -122,6 +122,10 @@
 - ✅ Undo удаления через toast с таймером (5 сек, CSS countdown)
 - ✅ CSS переменные + светлая/тёмная тема с переключателем
 - ✅ Медиа запросы (мобильная адаптация)
+- ✅ Защита от дубликатов — getState на фронте + UNIQUE constraint в БД
+- ✅ Drag-to-scroll — useDragScroll хук (mousedown/mousemove/mouseup на window)
+- ✅ Мобильное редактирование — двойной тап (onTouchEnd + useRef таймер) + карандашик
+- ✅ Кастомный скроллбар (webkit + Firefox scrollbar-width)
 
 ---
 
