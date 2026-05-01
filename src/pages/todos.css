@@ -392,6 +392,19 @@
 }
 
 
+/* Virtual list */
+.todo-list-scroll {
+  height: 480px;
+  overflow-y: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+}
+
+.todo-list-scroll .todo-list {
+  border: none;
+  border-radius: 0;
+}
+
 /* Undo toast */
 .undo-toast {
   position: fixed;
