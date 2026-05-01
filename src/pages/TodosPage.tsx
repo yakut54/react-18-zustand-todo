@@ -14,6 +14,7 @@ import {
   addTodoThunk,
   deleteTodoThunk,
   toggleTodoThunk,
+  updateTodoThunk,
 } from "../features/todos/todosThunks";
 import { useNavigate } from "react-router-dom";
 import { useFilterStore } from "../features/todos/useFilterStore";
@@ -22,12 +23,6 @@ import type { Todo } from "../shared/types";
 import "./todos.css";
 import { StatsTab } from "../features/todos/StatsTab";
 import { useTheme } from "../shared/lib/useTheme";
-import { ModalProvider } from "../features/todos/ModalContext";
-import { EditModal } from "../features/todos/EditModal";
-import { useModal } from "../features/todos/useModal";
-import { ConfirmProvider } from "../features/todos/ConfirmContext";
-import { ConfirmModal } from "../features/todos/ConfirmModal";
-import { useConfirm } from "../features/todos/useConfirm";
 
 const SkeletonList = () => (
   <ul className="todo-list">
@@ -41,7 +36,7 @@ const SkeletonList = () => (
   </ul>
 );
 
-const TodosContent = () => {
+export const TodosPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -60,11 +55,9 @@ const TodosContent = () => {
   const [tab, setTab] = useState<"todos" | "stats">("todos");
   const [isPending, startTransition] = useTransition();
   const { theme, toggle } = useTheme();
-  const { openModal } = useModal();
-  const { openConfirm } = useConfirm();
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const titleRef = useRef('');
+  const titleRef = useRef("");
 
   const filteredItems = useMemo(() => {
     let result = items;
@@ -79,7 +72,7 @@ const TodosContent = () => {
   }, [items, filter, deferredQuery]);
 
   const handleAdd = useCallback(() => {
-    const value = (inputRef.current?.value ?? '').trim();
+    const value = (inputRef.current?.value ?? "").trim();
     if (!value) return;
     dispatch(addTodoThunk(value));
     setTitle("");
@@ -108,6 +101,31 @@ const TodosContent = () => {
     [dispatch],
   );
 
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
+
+  const handleEditStart = useCallback((todo: Todo) => {
+    setEditingId(todo.id);
+    setEditValue(todo.title);
+  }, []);
+
+  const handleEditSave = useCallback(
+    (id: string) => {
+      if (
+        editValue.trim() &&
+        editValue !== items.find((t) => t.id === id)?.title
+      ) {
+        dispatch(updateTodoThunk({ id, title: editValue.trim() }));
+      }
+      setEditingId(null);
+    },
+    [dispatch, editValue, items],
+  );
+
+  const handleEditCancel = useCallback(() => {
+    setEditingId(null);
+  }, []);
+
   useEffect(() => {
     dispatch(fetchTodosThunk());
   }, [dispatch]);
@@ -132,7 +150,7 @@ const TodosContent = () => {
         <div className="todos-header-right">
           <span className="todos-user">{user?.email}</span>
           <button className="theme-toggle-btn" onClick={toggle}>
-            {theme === 'dark' ? '☀️' : '🌙'}
+            {theme === "dark" ? "☀️" : "🌙"}
           </button>
           <button className="logout-btn" onClick={handleLogout}>
             Выйти
@@ -167,9 +185,11 @@ const TodosContent = () => {
                 setTitle(e.target.value);
                 titleRef.current = e.target.value;
               }}
-              onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+              onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             />
-            <button type="button" onClick={handleAdd}>Добавить</button>
+            <button type="button" onClick={handleAdd}>
+              Добавить
+            </button>
           </div>
 
           <input
@@ -209,15 +229,31 @@ const TodosContent = () => {
                   checked={todo.completed}
                   onChange={() => toggleHandler(todo)}
                 />
-                <span
-                  className={todo.completed ? "completed" : ""}
-                  onClick={() => openModal(todo)}
-                >
-                  {todo.title}
-                </span>
+
+                {editingId === todo.id ? (
+                  <input
+                    className="todo-edit-input"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleEditSave(todo.id);
+                      if (e.key === "Escape") handleEditCancel();
+                    }}
+                    onBlur={() => handleEditSave(todo.id)}
+                    autoFocus
+                  />
+                ) : (
+                  <span
+                    className={todo.completed ? "completed" : ""}
+                    onDoubleClick={() => handleEditStart(todo)}
+                  >
+                    {todo.title}
+                  </span>
+                )}
+                
                 <button
                   className="todo-delete-btn"
-                  onClick={() => openConfirm(`Удалить задачу «${todo.title}»?`, () => handleDelete(todo.id))}
+                  onClick={() => handleDelete(todo.id)}
                 >
                   ×
                 </button>
@@ -235,18 +271,3 @@ const TodosContent = () => {
     </div>
   );
 };
-
-const EditModalWrapper = () => {
-  const { todo } = useModal()
-  return <EditModal key={todo?.id} />
-}
-
-export const TodosPage = () => (
-  <ConfirmProvider>
-    <ModalProvider>
-      <TodosContent />
-      <EditModalWrapper />
-      <ConfirmModal />
-    </ModalProvider>
-  </ConfirmProvider>
-);
