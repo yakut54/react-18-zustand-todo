@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../../shared/lib/supabase";
 import type { Todo } from "../../shared/types";
 import { revertToggleTodo, toggleTodo, updateTodo } from "./todosSlice";
+import type { RootState } from "../../store";
 
 export const fetchTodosThunk = createAsyncThunk<
   Todo[],
@@ -21,8 +22,14 @@ export const fetchTodosThunk = createAsyncThunk<
 export const addTodoThunk = createAsyncThunk<
   Todo,
   string,
-  { rejectValue: string }
->("todos/add", async (title, { rejectWithValue }) => {
+  { rejectValue: string; state: RootState }
+>("todos/add", async (title, { rejectWithValue, getState }) => {
+  const { todos } = getState();
+  const duplicate = todos.items.some(
+    (t) => t.title.toLowerCase() === title.toLowerCase(),
+  );
+  if (duplicate) return rejectWithValue("Такая задача уже есть");
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -64,10 +71,7 @@ export const updateTodoThunk = createAsyncThunk<
 >("todos/update", async ({ id, title }, { dispatch, rejectWithValue }) => {
   dispatch(updateTodo({ id, title }));
 
-  const { error } = await supabase
-    .from("todos")
-    .update({ title })
-    .eq("id", id);
+  const { error } = await supabase.from("todos").update({ title }).eq("id", id);
 
   if (error) return rejectWithValue(error.message);
 });

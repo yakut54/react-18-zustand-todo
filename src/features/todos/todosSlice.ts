@@ -24,15 +24,6 @@ const todosSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
-    setTodos: (state, action: PayloadAction<Todo[]>) => {
-      state.items = action.payload;
-    },
-    addTodo: (state, action: PayloadAction<Todo>) => {
-      state.items.push(action.payload);
-    },
-    removeTodo: (state, action: PayloadAction<string>) => {
-      state.items = state.items.filter((t) => t.id !== action.payload);
-    },
     toggleTodo: (state, action: PayloadAction<string>) => {
       const todo = state.items.find((t) => t.id === action.payload);
       if (todo) todo.completed = !todo.completed;
@@ -71,9 +62,6 @@ const todosSlice = createSlice({
       .addCase(addTodoThunk.fulfilled, (state, action: PayloadAction<Todo>) => {
         state.items.unshift(action.payload);
       })
-      .addCase(addTodoThunk.rejected, (state, action) => {
-        state.error = action.payload ?? "Ошибка добавления";
-      });
 
     builder
       .addCase(deleteTodoThunk.pending, (state) => {
@@ -106,5 +94,5 @@ const todosSlice = createSlice({
   },
 });
 
-export const { setTodos, addTodo, removeTodo, toggleTodo, revertToggleTodo, updateTodo } = todosSlice.actions;
+export const { toggleTodo, revertToggleTodo, updateTodo } = todosSlice.actions;
 export default todosSlice.reducer;

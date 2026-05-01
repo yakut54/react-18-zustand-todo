@@ -16,6 +16,7 @@ import { useUndoDelete } from "../features/todos/useUndoDelete";
 import { useInlineEdit } from "../features/todos/useInlineEdit";
 import { TodoItem } from "../features/todos/TodoItem";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useDragScroll } from "../features/todos/useDragScroll";
 import "./todos.css";
 
 const SkeletonList = () => (
@@ -49,11 +50,11 @@ export const TodosPage = () => {
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
   const [tab, setTab] = useState<"todos" | "stats">("todos");
+  const [addError, setAddError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition();
   const { theme, toggle } = useTheme();
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const titleRef = useRef("");
 
   const {
     editingId,
@@ -65,6 +66,7 @@ export const TodosPage = () => {
   } = useInlineEdit(items);
 
   const { pendingDelete, handleDelete, handleUndoDelete } = useUndoDelete();
+  const { onMouseDown } = useDragScroll(listRef);
 
   const filteredItems = useMemo(() => {
     let result = items;
@@ -79,6 +81,7 @@ export const TodosPage = () => {
     return result;
   }, [items, filter, deferredQuery, pendingDelete]);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: filteredItems.length,
     getScrollElement: () => listRef.current,
@@ -86,14 +89,18 @@ export const TodosPage = () => {
     overscan: 5,
   });
 
-  const handleAdd = useCallback(() => {
-    const value = (inputRef.current?.value ?? "").trim();
-    if (!value) return;
-    dispatch(addTodoThunk(value));
-    setTitle("");
-    titleRef.current = "";
-    inputRef.current?.blur();
-  }, [dispatch]);
+  const handleAdd = useCallback(async () => {
+    const value = (inputRef.current?.value ?? '').trim()
+    if (!value) return
+    try {
+      await dispatch(addTodoThunk(value)).unwrap()
+      setTitle('')
+      setAddError(null)
+      inputRef.current?.blur()
+    } catch (err) {
+      setAddError(err as string)
+    }
+  }, [dispatch])
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -146,16 +153,15 @@ export const TodosPage = () => {
               type="text"
               placeholder="Новая задача..."
               value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                titleRef.current = e.target.value;
-              }}
+              onChange={(e) => setTitle(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             />
             <button type="button" onClick={handleAdd}>
               Добавить
             </button>
           </div>
+
+          {addError && <p className="todo-form-error">{addError}</p>}
 
           <input
             className="todo-search"
@@ -186,7 +192,7 @@ export const TodosPage = () => {
             </button>
           </div>
 
-          <div ref={listRef} className="todo-list-scroll">
+          <div ref={listRef} className="todo-list-scroll" onMouseDown={onMouseDown}>
             <ul
               className="todo-list"
               style={{

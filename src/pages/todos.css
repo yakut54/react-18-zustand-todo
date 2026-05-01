@@ -166,6 +166,18 @@
   transform: scale(0.97);
 }
 
+/* Form error */
+.todo-form-error {
+  font-size: 0.8125rem;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.875rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 /* Search */
 .todo-search {
   width: 100%;
@@ -272,11 +284,22 @@
   color: var(--text-secondary);
   line-height: 1.4;
   transition: color 0.15s;
+  cursor: text;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.todo-item span:hover {
+  border-bottom-color: var(--border-input);
 }
 
 .todo-item span.completed {
   text-decoration: line-through;
   color: var(--text-completed);
+  cursor: default;
+  border-bottom-color: transparent;
 }
 
 .todo-delete-btn {
@@ -403,6 +426,31 @@
   overflow-y: auto;
   border: 1px solid var(--border-subtle);
   border-radius: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  cursor: grab;
+  user-select: none;
+}
+
+.todo-list-scroll:active {
+  cursor: grabbing;
+}
+
+.todo-list-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.todo-list-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.todo-list-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.todo-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--text-ghost);
 }
 
 .todo-list-scroll .todo-list {
